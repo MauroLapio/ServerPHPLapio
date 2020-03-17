@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Esempio ajax</title>
+
+        <script>
+            function get()
+            {
+                document.getElementById("contentRisposta").style.display="block";
+                //preparo la richiesta ajax
+                var xhr = new XMLHttpRequest();
+                //asincrona
+                xhr.open("GET", 'http://localhost:8000/api.php', true);
+                //configuro la callback di risposta ok
+                xhr.onload = function() {
+                    //scrivo la risposta nel body della pagina
+                    document.getElementById('risposta').innerHTML = xhr.response;
+                };
+                //configuro la callback di errore
+                xhr.onerror = function() { 
+                    alert('Errore');
+                };
+                //invio la richiesta ajax
+                xhr.send();
+            }
+
+            function getid()
+            {
+                document.getElementById("contentRisposta").style.display="block";
+
+                var id = document.getElementById("inputid").value;
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", 'http://localhost:8000/api.php?id='+id, true);
+                xhr.onload = function()
+                {
+                    document.getElementById('risposta').innerHTML = xhr.response;
+                }
+                xhr.onerror = function()
+                { 
+                    alert('Errore');
+                };
+                xhr.send();
+            }
+
+            function deleteid()
+            {
+                document.getElementById("contentRisposta").style.display="block";
+                
+                var id = document.getElementById("inputid").value;
+                var xhr = new XMLHttpRequest();
+                xhr.open("DELETE", 'http://localhost:8000/api.php?id='+id, true);
+                xhr.onload = function()
+                {
+                    document.getElementById('risposta').innerHTML = xhr.response;
+                }
+                xhr.onerror = function()
+                { 
+                    alert('Errore');
+                };
+                xhr.send();
+            }
+
+            function post()
+            {
+                document.getElementById("contentRisposta").style.display="block";
+
+                var nome = document.getElementById("inputNome").value;
+                var cognome = document.getElementById("inputCognome").value;
+                var sidi = document.getElementById("inputSidi").value;
+                var tax = document.getElementById("inputTax").value;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", 'http://localhost:8000/api.php?name='+nome+"&surname="+cognome+"&sidi_code="+sidi+"&tax_code="+tax, true);
+                xhr.onload = function()
+                {
+                    document.getElementById('risposta').innerHTML = xhr.response;
+                }
+                xhr.onerror = function()
+                { 
+                    alert('Errore');
+                };
+                xhr.send();
+            }
+        </script>
+
+        
+        
+        <!--<script>
+            //preparo la richiesta ajax
+            var xhr = new XMLHttpRequest();
+            //sincrona
+            xhr.open("GET", 'http://localhost:8000/query.php?id=64', false);
+            //invio la richiesta ajax
+            xhr.send();
+            document.getElementById('risposta').innerHTML = xhr.response;
+        </script>-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        <h2>Richiesta</h2>
+        <button class="btn btn-secondary" id="get" onclick="get()">GET</button>
+        <br>
+        <div class="content rounded">
+            <input id="inputid" placeholder="ID studente"/>
+            <button class="btn btn-primary" id="getid" onclick="getid()">GET ID</button>
+            <button class="btn btn-warning"id="deleteid" onclick="deleteid()">DELETE</button>
+        </div>
+        <div class="content row rounded">
+            <div class="col-6">
+                <input id="inputNome" placeholder="Nome"/><br>
+                <input id="inputCognome" placeholder="Cognome"/><br>
+                <input id="inputSidi" placeholder="Codice SIDI"/><br>
+                <input id="inputTax" placeholder="Codice fiscale"/><br>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-info" id="post" onclick="post()">POST</button>
+            </div>
+        </div>
+        <div id="contentRisposta">
+        <h2>Risposta</h2>
+        <div class="content rounded" id="risposta"></div>
+        </div>
+    </body>
+</html>
+
+<style>
+    body
+    {
+        margin-left:300px;
+        margin-top:50px;
+    }
+
+    .content, .btn
+    {
+        margin: auto;
+        margin-top:25px;
+        margin-bottom:25px;
+    }
+
+    .content
+    {
+        text-align:center;
+        margin-right:60%;
+        padding:10px;
+        background-color: #b4ddff;
+    }
+
+    #post
+    {
+        margin:0;
+    }
+
+    #risposta
+    {
+        width:60%;
+        text-align:left;
+    }
+
+    #contentRisposta
+    {
+        display:none;
+    }
+
+    #getid
+    {
+        margin-left:25%;
+    }
+
+    input
+    {
+        margin-top:5px;
+        margin-bottom:5px;
+    }
+</style>
