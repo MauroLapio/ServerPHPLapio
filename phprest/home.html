@@ -4,11 +4,19 @@
         <title>Esempio ajax</title>
 
         <script>
+            var xhr;
+
+            var id;
+            var nome;
+            var cognome;
+            var sidi;
+            var tax;
+
             function get()
             {
                 document.getElementById("contentRisposta").style.display="block";
                 //preparo la richiesta ajax
-                var xhr = new XMLHttpRequest();
+                xhr = new XMLHttpRequest();
                 //asincrona
                 xhr.open("GET", 'http://localhost:8000/api.php', true);
                 //configuro la callback di risposta ok
@@ -28,8 +36,8 @@
             {
                 document.getElementById("contentRisposta").style.display="block";
 
-                var id = document.getElementById("inputid").value;
-                var xhr = new XMLHttpRequest();
+                id = document.getElementById("inputId").value;
+                xhr = new XMLHttpRequest();
                 xhr.open("GET", 'http://localhost:8000/api.php?id='+id, true);
                 xhr.onload = function()
                 {
@@ -46,8 +54,8 @@
             {
                 document.getElementById("contentRisposta").style.display="block";
                 
-                var id = document.getElementById("inputid").value;
-                var xhr = new XMLHttpRequest();
+                id = document.getElementById("inputId").value;
+                xhr = new XMLHttpRequest();
                 xhr.open("DELETE", 'http://localhost:8000/api.php?id='+id, true);
                 xhr.onload = function()
                 {
@@ -64,12 +72,12 @@
             {
                 document.getElementById("contentRisposta").style.display="block";
 
-                var nome = document.getElementById("inputNome").value;
-                var cognome = document.getElementById("inputCognome").value;
-                var sidi = document.getElementById("inputSidi").value;
-                var tax = document.getElementById("inputTax").value;
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", 'http://localhost:8000/api.php?name='+nome+"&surname="+cognome+"&sidi_code="+sidi+"&tax_code="+tax, true);
+                nome = document.getElementById("inputNome").value;
+                cognome = document.getElementById("inputCognome").value;
+                sidi = document.getElementById("inputSidi").value;
+                tax = document.getElementById("inputTax").value;
+                xhr = new XMLHttpRequest();
+                xhr.open("POST", 'http://localhost:8000/api.php', true);
                 xhr.onload = function()
                 {
                     document.getElementById('risposta').innerHTML = xhr.response;
@@ -78,7 +86,44 @@
                 { 
                     alert('Errore');
                 };
-                xhr.send();
+                xhr.send(
+                    JSON.stringify({
+                        "name":nome,
+                        "surname":cognome,
+                        "sidi_code":sidi,
+                        "tax_code":tax
+                    })
+                );
+            }
+
+            function patch()
+            {
+                document.getElementById("contentRisposta").style.display="block";
+
+                id = document.getElementById("inputId2").value;
+                nome = document.getElementById("inputNome2").value;
+                cognome = document.getElementById("inputCognome2").value;
+                sidi = document.getElementById("inputSidi2").value;
+                tax = document.getElementById("inputTax2").value;
+                xhr = new XMLHttpRequest();
+                xhr.open("PATCH", 'http://localhost:8000/api.php', true);
+                xhr.onload = function()
+                {
+                    document.getElementById('risposta').innerHTML = xhr.response;
+                }
+                xhr.onerror = function()
+                { 
+                    alert('Errore');
+                };
+                xhr.send(
+                    JSON.stringify({
+                        "id":id,
+                        "name":nome,
+                        "surname":cognome,
+                        "sidi_code":sidi,
+                        "tax_code":tax
+                    })
+                );
             }
         </script>
 
@@ -100,7 +145,7 @@
         <button class="btn btn-secondary" id="get" onclick="get()">GET</button>
         <br>
         <div class="content rounded">
-            <input id="inputid" placeholder="ID studente"/>
+            <input id="inputId" placeholder="ID studente"/>
             <button class="btn btn-primary" id="getid" onclick="getid()">GET ID</button>
             <button class="btn btn-warning"id="deleteid" onclick="deleteid()">DELETE</button>
         </div>
@@ -113,6 +158,20 @@
             </div>
             <div class="col-6">
                 <button class="btn btn-info" id="post" onclick="post()">POST</button>
+            </div>
+        </div>
+        <div class="content row rounded">
+            <div class="col-6">
+                <input id="inputId2" placeholder="ID Studente"/><br>
+                <input id="inputNome2" placeholder="Nome"/><br>
+                <input id="inputCognome2" placeholder="Cognome"/><br>
+                <input id="inputSidi2" placeholder="Codice SIDI"/><br>
+                <input id="inputTax2" placeholder="Codice fiscale"/><br>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-success" id="patch" onclick="patch()">PATCH</button>
+                <br>
+                <button class="btn btn-success" id="put" onclick="put()">PUT</button>
             </div>
         </div>
         <div id="contentRisposta">
@@ -147,6 +206,7 @@
     #post
     {
         margin:0;
+        margin-top:50px;
     }
 
     #risposta

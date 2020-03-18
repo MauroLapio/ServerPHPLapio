@@ -31,7 +31,7 @@ class Student
 			    'name' => $this->_name,
 			    'surname' => $this->_surname,
 			    'sidi_code' => $this->_sidiCode,
-			    'tax_code' => $this->_taxCode,
+			    'tax_code' => $this->_taxCode
 			];
 	    	$stmt = $this->db->prepare($sql);
 	    	$stmt->execute($data);
@@ -40,7 +40,7 @@ class Student
  
 		} catch (Exception $e)
 		{
-    		die("Oh noes! There's an error in the query!");
+    		die("Oh noes! There's an error in the query! ".$e);
 		}
  
     }
@@ -55,7 +55,7 @@ class Student
 		    $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
 		} catch (Exception $e) {
-		    die("Oh noes! There's an error in the query!");
+		    die("Oh noes! There's an error in the query! ".$e);
 		}
     }
 
@@ -71,7 +71,7 @@ class Student
 		    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
             return $result;
 		} catch (Exception $e) {
-		    die("Oh noes! There's an error in the query!");
+		    die("Oh noes! There's an error in the query! ".$e);
 		}
 	}
 	
@@ -87,11 +87,10 @@ class Student
 		}
 		catch (Exception $e)
 		{
-		    die("Oh noes! There's an error in the query!");
+		    die("Oh noes! There's an error in the query! ".$e);
 		}
 	}
  
-    // delete TODO
 	public function delete()
 	{
 		try
@@ -116,16 +115,73 @@ class Student
 		}
 		catch (Exception $e)
 		{
-			die("Oh noes! There's an error in the query!");
+			die("Oh noes! There's an error in the query! ".$e);
 		}
     }
 
-    // put TODO
-    public function put() {
+	public function put()
+	{
+		try
+		{
+    		$sql = 'INSERT INTO student (name, surname, sidi_code, tax_code)  VALUES (:name, :surname, :sidi_code, :tax_code) WHERE id=:id';
+    		$data = [
+				'id' => $this->_id,
+			    'name' => $this->_name,
+			    'surname' => $this->_surname,
+			    'sidi_code' => $this->_sidiCode,
+			    'tax_code' => $this->_taxCode
+			];
+	    	$stmt = $this->db->prepare($sql);
+	    	$stmt->execute($data);
+			$status = $stmt->rowCount();
+            return $status;
+ 
+		} catch (Exception $e)
+		{
+    		die("Oh noes! There's an error in the query! ".$e);
+		}
     }
  
-    // patch TODO
-    public function patch() {
+	public function patch()
+	{
+		try
+		{
+			$data = ['id' =>$this_id];
+			$sql = 'UPDATE student SET ';
+			
+			foreach($this as $key => $value)
+			{
+				if($value != null && strcmp($key,'db')!=0 && strcmp($key,'_id')!=0)
+				{
+					$key = ltrim($key, "_");
+					$sql = $sql . "$key=:$key,";
+					$stringdata = "'" . $key . "'"=> $this->{"_$key"}; //TODO FIXING
+					array_push($data, $stringdata);
+				}
+			}
+			$sql = rtrim($sql,",");
+			$sql = $sql . " WHERE id=:id";
+			echo $sql;
+			echo print_r($data);
+
+			/*
+    		$data = [
+			    'name' => $this->_name,
+			    'surname' => $this->_surname,
+			    'sidi_code' => $this->_sidiCode,
+			    'tax_code' => $this->_taxCode
+			];
+			*/
+
+	    	$stmt = $this->db->prepare($sql);
+	    	$stmt->execute($data);
+			$status = $stmt->rowCount();
+            return $status;
+ 
+		} catch (Exception $e)
+		{
+    		die("Oh noes! There's an error in the query! ".$e);
+		}
     }
  
 }

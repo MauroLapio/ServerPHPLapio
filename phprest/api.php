@@ -23,18 +23,15 @@ switch($requestMethod)
 		break;
     
     case 'POST':
-        $name = $_GET['name'];
-        $surname = $_GET['surname'];
-        $sidiCode = $_GET['sidi_code'];
-        $taxCode = $_GET['tax_code'];
+        $stud = json_decode(file_get_contents("php://input"),true);
 
-        $student->_name = $name;
-        $student->_surname = $surname;
-        $student->_sidiCode = $sidiCode;
-        $student->_taxCode = $taxCode;
-
-        if(strcmp($name,"") != 0 && strcmp($surname,"") != 0 && strcmp($sidiCode,"") != 0 && strcmp($taxCode,"") != 0)
+        if(strcmp($stud['name'],"") != 0 && strcmp($stud['surname'],"") != 0 && strcmp($stud['sidi_code'],"") != 0 && strcmp($stud['tax_code'],"") != 0) //controlla che tutti i valori siano stati passati
         {
+            $student->_name = $stud['name'];
+            $student->_surname = $stud['surname'];
+            $student->_sidiCode = $stud['sidi_code'];
+            $student->_taxCode = $stud['tax_code'];
+
             $data = $student->insert();
             if(!empty($data))
             {
@@ -52,7 +49,7 @@ switch($requestMethod)
             }
             else
             {
-                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true);
+                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true); //non dovrebbe mai arrivare qui
             }
             header('Content-Type: application/json');
             echo "<b>Aggiunto: </b>" . $js_encode;
@@ -78,12 +75,61 @@ switch($requestMethod)
         header('Content-Type: application/json');
         echo $js_encode;
         break;
+
     case 'PATCH':
-        //TODO patch json_decode
+        $stud = json_decode(file_get_contents("php://input"),true);
+        $student->_id = $stud['id'];
+
+        if(strcmp($student->_id, "")!=0) //controlla che l'id sia passato
+        {
+            echo "<b>STUD: </b>";
+            foreach($stud as $key => $value)
+            {
+                echo "<b>".$key ."=". $value." </b>"; //$key = name $value=Pippo
+                if(strcmp($value,"")!=0) //controlla che il valore sia passato
+                {
+                    $student->{"_$key"} = $value; //$student->_name = Pippo
+                }
+            }
+            /*
+            $student->_name = $stud['name'];
+            $student->_surname = $stud['surname'];
+            $student->_sidiCode = $stud['sidi_code'];
+            $student->_taxCode = $stud['tax_code'];
+            */
+
+            $data = $student->patch();
+            if(!empty($data))
+            {
+                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
+            }
+            else
+            {
+                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet or data is the same as previous.'), true);
+            }
+
+            $data = $student->one();
+            if(!empty($data))
+            {
+                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
+            }
+            else
+            {
+                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet or data is the same as previous.'), true);
+            }
+            header('Content-Type: application/json');
+            echo "<b>Modificato: </b>" . $js_encode;
+        }
+        else
+        {
+            echo "PATCH studente non valido";
+        }
         break;
+
     case 'PUT':
         //TODO put json_decode
         break;
+
     default:
 	    header("HTTP/1.0 405 Method Not Allowed");
 	    break;
