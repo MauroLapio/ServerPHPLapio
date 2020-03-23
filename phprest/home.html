@@ -125,6 +125,36 @@
                     })
                 );
             }
+
+            function put()
+            {
+                document.getElementById("contentRisposta").style.display="block";
+
+                id = document.getElementById("inputId2").value;
+                nome = document.getElementById("inputNome2").value;
+                cognome = document.getElementById("inputCognome2").value;
+                sidi = document.getElementById("inputSidi2").value;
+                tax = document.getElementById("inputTax2").value;
+                xhr = new XMLHttpRequest();
+                xhr.open("PUT", 'http://localhost:8000/api.php', true);
+                xhr.onload = function()
+                {
+                    document.getElementById('risposta').innerHTML = xhr.response;
+                }
+                xhr.onerror = function()
+                { 
+                    alert('Errore');
+                };
+                xhr.send(
+                    JSON.stringify({
+                        "id":id,
+                        "name":nome,
+                        "surname":cognome,
+                        "sidi_code":sidi,
+                        "tax_code":tax
+                    })
+                );
+            }
         </script>
 
         

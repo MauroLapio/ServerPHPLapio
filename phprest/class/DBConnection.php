@@ -7,7 +7,8 @@
  */
  
 // Database Connection
-class DBConnection {
+class DBConnection
+{
     private $_dbHostname = "localhost:3306";
     private $_dbName = "FI_ITIS_MEUCCI";
     private $_dbUsername = "root";
@@ -20,7 +21,8 @@ class DBConnection {
         	$this->_con = new PDO("mysql:host=$this->_dbHostname;dbname=$this->_dbName", $this->_dbUsername, $this->_dbPassword);    
           $this->_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
           $this->_con->exec('SET NAMES utf8');
-	    } catch(PDOException $e) {
+      } catch(PDOException $e)
+      {
 			echo "Connection failed: " . $e->getMessage();
 		}
  
