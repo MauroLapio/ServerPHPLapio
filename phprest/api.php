@@ -10,13 +10,18 @@ switch($requestMethod)
 			$id = $_GET['id'];
 			$student->_id = $id;
 			$data = $student->one();
-		} else {
+        }
+        else
+        {
 			$data = $student->list();
 		}
-		if(!empty($data)) {
-          $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
-        } else {
-          $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true);
+        if(!empty($data))
+        {
+            $js_encode = json_encode(array($data), true);
+        }
+        else
+        {
+            $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true);
         }
         header('Content-Type: application/json');
 		echo $js_encode;
@@ -35,24 +40,15 @@ switch($requestMethod)
             $data = $student->insert();
             if(!empty($data))
             {
-                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
+                $js_encode = json_encode(array($data), true);
             }
             else
             {
                 $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true);
             }
-
-            $data = $student->getLast();
-            if(!empty($data))
-            {
-                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
-            }
-            else
-            {
-                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true); //non dovrebbe mai arrivare qui
-            }
+            
             header('Content-Type: application/json');
-            echo "<b>Aggiunto: </b>" . $js_encode;
+            echo $js_encode;
         }
         else
         {
@@ -66,7 +62,7 @@ switch($requestMethod)
         $data = $student->delete();
         if(!empty($data))
         {
-            $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
+            $js_encode = json_encode(array($data), true);
         }
         else
         {
@@ -93,24 +89,14 @@ switch($requestMethod)
             $data = $student->patch();
             if(!empty($data))
             {
-                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
-            }
-            else
-            {
-                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet or data is the same as previous.'), true);
-            }
-
-            $data = $student->one();
-            if(!empty($data))
-            {
-                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
+                $js_encode = json_encode(array($data), true);
             }
             else
             {
                 $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet or data is the same as previous.'), true);
             }
             header('Content-Type: application/json');
-            echo "<b>Modificato: </b>" . $js_encode;
+            echo $js_encode;
         }
         else //mancanza di id
         {
@@ -132,24 +118,15 @@ switch($requestMethod)
             $data = $student->put();
             if(!empty($data))
             {
-                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
+                $js_encode = json_encode(array($data), true);
             }
             else
             {
                 $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet or data is the same as previous.'), true);
             }
 
-            $data = $student->one();
-            if(!empty($data))
-            {
-                $js_encode = json_encode(array('status'=>TRUE, 'studentInfo'=>$data), true);
-            }
-            else
-            {
-                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet or data is the same as previous.'), true);
-            }
             header('Content-Type: application/json');
-            echo "<b>Modificato: </b>" . $js_encode;
+            echo $js_encode;
         }
         else //mancanza di id
         {
