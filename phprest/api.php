@@ -38,21 +38,16 @@ switch($requestMethod)
             $student->_taxCode = $stud['tax_code'];
 
             $data = $student->insert();
-            if(!empty($data))
-            {
-                $js_encode = json_encode(array($data), true);
-            }
-            else
-            {
-                $js_encode = json_encode(array('status'=>FALSE, 'message'=>'There is no record yet.'), true);
-            }
+            $js_encode = json_encode(array($data), true);
             
             header('Content-Type: application/json');
             echo $js_encode;
         }
         else
         {
-            echo "POST studente non valido";
+            $js_encode = json_encode(array('status'=>FALSE, 'message'=>'Input studente non valido'), true);
+            header('Content-Type: application/json');
+            echo $js_encode;
         }
         break;
 
